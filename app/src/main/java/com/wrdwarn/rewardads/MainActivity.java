@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 
         LinearLayout hero = createCard();
         hero.setBackground(heroBackground());
-        TextView tag = createSmallCaps("WELDING · BETA");
+        TextView tag = createSmallCaps("welding · beta");
         tag.setTextColor(Color.rgb(199, 210, 254));
         hero.addView(tag, fullWidthWrapContent());
 
