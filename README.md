@@ -58,35 +58,35 @@ releases/wrdwarn-reward-ads-debug.apk
 推荐国内代理：
 
 ```text
-https://gh.llkk.cc/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/7e38d7c1d16370dbc17a7b12a44940ca038f538a/releases/wrdwarn-reward-ads-debug.apk
+https://gh.llkk.cc/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/1b0f7cc3835a2d831e1843b8a92b07f3d9260546/releases/wrdwarn-reward-ads-debug.apk
 ```
 
 备用代理：
 
 ```text
-https://ghproxy.net/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/7e38d7c1d16370dbc17a7b12a44940ca038f538a/releases/wrdwarn-reward-ads-debug.apk
+https://ghproxy.net/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/1b0f7cc3835a2d831e1843b8a92b07f3d9260546/releases/wrdwarn-reward-ads-debug.apk
 ```
 
 ```text
-https://ghfast.top/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/7e38d7c1d16370dbc17a7b12a44940ca038f538a/releases/wrdwarn-reward-ads-debug.apk
+https://ghfast.top/https://raw.githubusercontent.com/Zhangao12190/wrdwarn/1b0f7cc3835a2d831e1843b8a92b07f3d9260546/releases/wrdwarn-reward-ads-debug.apk
 ```
 
 国际 CDN 镜像：
 
 ```text
-https://cdn.jsdelivr.net/gh/Zhangao12190/wrdwarn@7e38d7c1d16370dbc17a7b12a44940ca038f538a/releases/wrdwarn-reward-ads-debug.apk
+https://cdn.jsdelivr.net/gh/Zhangao12190/wrdwarn@1b0f7cc3835a2d831e1843b8a92b07f3d9260546/releases/wrdwarn-reward-ads-debug.apk
 ```
 
 也可以使用 GitHub Raw 原始下载：
 
 ```text
-https://raw.githubusercontent.com/Zhangao12190/wrdwarn/7e38d7c1d16370dbc17a7b12a44940ca038f538a/releases/wrdwarn-reward-ads-debug.apk
+https://raw.githubusercontent.com/Zhangao12190/wrdwarn/1b0f7cc3835a2d831e1843b8a92b07f3d9260546/releases/wrdwarn-reward-ads-debug.apk
 ```
 
 当前 APK SHA-256：
 
 ```text
-f4666e3845570c9a8827d2fab18e582fed5829c332c0f7b45640ab7d7baa03e1
+81bbe6f99f8ba2ed981bc3a23be5376814214069df90185466ae67df6da21ecd
 ```
 
 ## 下一步建议
