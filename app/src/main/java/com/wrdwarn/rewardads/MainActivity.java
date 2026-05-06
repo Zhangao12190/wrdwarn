@@ -71,11 +71,11 @@ public class MainActivity extends Activity {
 
         LinearLayout hero = createCard();
         hero.setBackground(heroBackground());
-        TextView tag = createSmallCaps("WILDING · FLUENT");
+        TextView tag = createSmallCaps("WELDING · BETA");
         tag.setTextColor(Color.rgb(199, 210, 254));
         hero.addView(tag, fullWidthWrapContent());
 
-        TextView title = createTitle("Wilding\n小游戏奖励");
+        TextView title = createTitle("welding\n小游戏奖励");
         title.setTextColor(Color.WHITE);
         title.setTextSize(30);
         title.setGravity(Gravity.CENTER);

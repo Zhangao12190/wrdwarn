@@ -1,4 +1,4 @@
-# Wilding Android MVP
+# welding Android MVP
 
 这是一个合规激励广告安卓 MVP，用于验证“小游戏 + 广告确认奖励”的简化产品流程。
 
@@ -7,8 +7,8 @@
 - 原生 Android Java 项目
 - 接入 Google AdMob 激励视频广告 SDK
 - 默认使用 Google 官方测试广告位，避免开发阶段产生无效流量
-- 应用名称：Wilding
-- Fluent 风格扁平 UI，使用蓝紫/灰白配色
+- 应用名称：welding
+- 扁平 UI，使用蓝紫/灰白配色
 - 首页聚焦核心流程：开始尖刺蛇、游戏结束、观看广告领取奖励
 - 小游戏中心原型，当前主推“尖刺蛇”
 - 用户完成小游戏后生成待领取金币
