@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 final class RewardLedger {
     private static final String PREFS_NAME = "reward_ledger";
+    private static final String KEY_ACCOUNT_ID = "account_id";
     private static final String KEY_BALANCE = "coin_balance";
     private static final String KEY_HISTORY = "coin_history";
+    private static final String KEY_PENDING_REWARD = "pending_reward";
+    private static final String KEY_PENDING_SOURCE = "pending_source";
     private static final int MAX_HISTORY_ITEMS = 20;
 
     private final SharedPreferences preferences;
@@ -23,6 +27,41 @@ final class RewardLedger {
 
     int getBalance() {
         return preferences.getInt(KEY_BALANCE, 0);
+    }
+
+    String getAccountId() {
+        String accountId = preferences.getString(KEY_ACCOUNT_ID, "");
+        if (accountId != null && !accountId.isEmpty()) {
+            return accountId;
+        }
+
+        String newAccountId = "guest-" + UUID.randomUUID().toString().substring(0, 8);
+        preferences.edit()
+                .putString(KEY_ACCOUNT_ID, newAccountId)
+                .apply();
+        return newAccountId;
+    }
+
+    int getPendingReward() {
+        return preferences.getInt(KEY_PENDING_REWARD, 0);
+    }
+
+    String getPendingSource() {
+        return preferences.getString(KEY_PENDING_SOURCE, "");
+    }
+
+    void setPendingReward(String source, int amount) {
+        preferences.edit()
+                .putString(KEY_PENDING_SOURCE, source)
+                .putInt(KEY_PENDING_REWARD, amount)
+                .apply();
+    }
+
+    void clearPendingReward() {
+        preferences.edit()
+                .remove(KEY_PENDING_SOURCE)
+                .remove(KEY_PENDING_REWARD)
+                .apply();
     }
 
     int addReward(String source, int amount) {
