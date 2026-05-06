@@ -151,12 +151,12 @@ final class SpikySnakeGameView extends View {
         float cell = size / GRID_SIZE;
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(246, 248, 247));
+        paint.setColor(Color.rgb(248, 250, 252));
         canvas.drawRoundRect(left, top, left + size, top + size, cell / 2f, cell / 2f, paint);
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1f);
-        paint.setColor(Color.rgb(220, 229, 225));
+        paint.setColor(Color.rgb(226, 232, 240));
         for (int index = 0; index <= GRID_SIZE; index++) {
             float line = left + index * cell;
             canvas.drawLine(line, top, line, top + size, paint);
@@ -287,7 +287,7 @@ final class SpikySnakeGameView extends View {
                     top + (part.y + 1) * cell - inset
             );
             paint.setStyle(Paint.Style.FILL);
-            paint.setColor(isHead ? Color.rgb(7, 91, 74) : Color.rgb(14, 124, 102));
+            paint.setColor(isHead ? Color.rgb(29, 78, 216) : Color.rgb(37, 99, 235));
             canvas.drawRoundRect(cellRect, cell * 0.18f, cell * 0.18f, paint);
             isHead = false;
         }

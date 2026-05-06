@@ -71,18 +71,18 @@ public class MainActivity extends Activity {
 
         LinearLayout hero = createCard();
         hero.setBackground(heroBackground());
-        TextView tag = createSmallCaps("CAMPUS PLAY · 简化版");
-        tag.setTextColor(Color.rgb(255, 221, 107));
+        TextView tag = createSmallCaps("WILDING · FLUENT");
+        tag.setTextColor(Color.rgb(199, 210, 254));
         hero.addView(tag, fullWidthWrapContent());
 
-        TextView title = createTitle("点开游戏\n赢金币奖励");
+        TextView title = createTitle("Wilding\n小游戏奖励");
         title.setTextColor(Color.WHITE);
         title.setTextSize(30);
         title.setGravity(Gravity.CENTER);
         hero.addView(title, fullWidthWrapContent());
 
         TextView subtitle = createBodyText("只保留核心流程：玩尖刺蛇，游戏结束后点击观看广告领取奖励。");
-        subtitle.setTextColor(Color.rgb(224, 241, 236));
+        subtitle.setTextColor(Color.rgb(226, 232, 240));
         subtitle.setGravity(Gravity.CENTER);
         hero.addView(subtitle, fullWidthWrapContent());
         root.addView(hero, cardLayoutParams());
@@ -389,7 +389,7 @@ public class MainActivity extends Activity {
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER);
         box.setPadding(dp(10), dp(12), dp(10), dp(12));
-        box.setBackground(insetBackground(Color.WHITE, Color.rgb(221, 234, 229), dp(18)));
+        box.setBackground(insetBackground(Color.WHITE, Color.rgb(226, 232, 240), dp(18)));
 
         TextView labelView = createCaption(label);
         labelView.setGravity(Gravity.CENTER);
@@ -452,23 +452,21 @@ public class MainActivity extends Activity {
         button.setTextColor(Color.WHITE);
         button.setTextSize(16);
         button.setTypeface(Typeface.DEFAULT_BOLD);
-        GradientDrawable background = new GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT,
-                new int[]{getColor(R.color.brand_green), getColor(R.color.brand_green_dark)}
-        );
-        background.setCornerRadius(dp(18));
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(getColor(R.color.accent));
+        background.setCornerRadius(dp(14));
         button.setBackground(background);
         button.setAllCaps(false);
         button.setMinHeight(dp(50));
     }
 
     private void styleSecondaryButton(Button button) {
-        button.setTextColor(getColor(R.color.brand_green_dark));
+        button.setTextColor(getColor(R.color.accent));
         button.setTextSize(15);
         GradientDrawable background = new GradientDrawable();
-        background.setColor(Color.rgb(232, 245, 241));
-        background.setStroke(dp(1), Color.rgb(181, 219, 209));
-        background.setCornerRadius(dp(18));
+        background.setColor(Color.rgb(239, 246, 255));
+        background.setStroke(dp(1), Color.rgb(191, 219, 254));
+        background.setCornerRadius(dp(14));
         button.setBackground(background);
         button.setAllCaps(false);
         button.setMinHeight(dp(46));
@@ -477,14 +475,14 @@ public class MainActivity extends Activity {
     private GradientDrawable screenBackground() {
         return new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{Color.rgb(232, 246, 241), Color.rgb(248, 251, 249)}
+                new int[]{Color.rgb(248, 250, 252), Color.rgb(241, 245, 249)}
         );
     }
 
     private GradientDrawable heroBackground() {
         GradientDrawable drawable = new GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
-                new int[]{Color.rgb(6, 49, 61), Color.rgb(14, 124, 102)}
+                new int[]{Color.rgb(30, 64, 175), Color.rgb(79, 70, 229)}
         );
         drawable.setCornerRadius(dp(24));
         return drawable;
@@ -494,7 +492,7 @@ public class MainActivity extends Activity {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(getColor(R.color.surface));
         drawable.setCornerRadius(dp(22));
-        drawable.setStroke(dp(1), Color.rgb(221, 234, 229));
+        drawable.setStroke(dp(1), Color.rgb(226, 232, 240));
         return drawable;
     }
 
