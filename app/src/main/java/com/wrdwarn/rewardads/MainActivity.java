@@ -99,6 +99,11 @@ public class MainActivity extends Activity {
         slogan.setPadding(0, dp(14), 0, dp(12));
         root.addView(slogan, fullWidthWrapContent());
 
+        LinearLayout launchChips = createHorizontalRow();
+        launchChips.addView(createLaunchChip("小游戏驱动"), weightedParams(1f, 0));
+        launchChips.addView(createLaunchChip("广告确认入账"), weightedParams(1f, dp(8)));
+        root.addView(launchChips, fullWidthWrapContent());
+
         LinearLayout routeCard = createGlassCard();
         routeCard.addView(createLaunchStep("01", "玩尖刺蛇", "滑动控制蛇吃金币，避开尖刺和墙壁。"), fullWidthWrapContent());
         routeCard.addView(createLaunchStep("02", "生成待领取金币", "小游戏结束后，分数会换成待领取奖励。"), fullWidthWrapContent());
@@ -137,6 +142,25 @@ public class MainActivity extends Activity {
                 ScrollView.LayoutParams.WRAP_CONTENT
         ));
 
+        LinearLayout topBar = createHorizontalRow();
+        topBar.setGravity(Gravity.CENTER_VERTICAL);
+        TextView logo = createLogoBadge();
+        topBar.addView(logo, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        LinearLayout topCopy = new LinearLayout(this);
+        topCopy.setOrientation(LinearLayout.VERTICAL);
+        topCopy.setPadding(dp(12), 0, 0, 0);
+        TextView appTitle = createTitle("Campus Play");
+        appTitle.setTextSize(22);
+        topCopy.addView(appTitle, fullWidthWrapContent());
+        topCopy.addView(createCaption("小游戏任务中心 · 测试版"), fullWidthWrapContent());
+        topBar.addView(topCopy, weightedParams(1f, 0));
+        TextView levelBadge = createStatusChip("LV.1 体验账户", Color.rgb(255, 250, 232), Color.rgb(245, 222, 142));
+        topBar.addView(levelBadge, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        content.addView(topBar, cardLayoutParams());
+
         LinearLayout heroCard = createCard();
         heroCard.setBackground(heroBackground());
         TextView eyebrow = createSmallCaps("STUDENT SIDE QUESTS");
@@ -159,9 +183,16 @@ public class MainActivity extends Activity {
         heroCard.addView(heroStats, fullWidthWrapContent());
         content.addView(heroCard, cardLayoutParams());
 
+        LinearLayout missionCard = createCard();
+        missionCard.addView(createSectionHeader("今日任务路线", "完成后再领取奖励"), fullWidthWrapContent());
+        missionCard.addView(createTaskRow("1", "玩一局尖刺蛇", "先获得待领取金币"), fullWidthWrapContent());
+        missionCard.addView(createTaskRow("2", "观看一次激励广告", "SDK 确认后入账"), fullWidthWrapContent());
+        missionCard.addView(createTaskRow("3", "查看个人中心流水", "确认金币记录"), fullWidthWrapContent());
+        content.addView(missionCard, cardLayoutParams());
+
         LinearLayout rewardCard = createCard();
         rewardCard.setBackground(accentCardBackground());
-        rewardCard.addView(createSectionTitle("今日奖励面板"), fullWidthWrapContent());
+        rewardCard.addView(createSectionHeader("今日奖励面板", "先玩后领，状态更清楚"), fullWidthWrapContent());
         TextView rewardCopy = createBodyText("完成小游戏后，奖励会先进入“待领取”。观看激励广告成功后，金币才会进入账户。");
         rewardCard.addView(rewardCopy, fullWidthWrapContent());
         LinearLayout rewardStats = createHorizontalRow();
@@ -185,16 +216,26 @@ public class MainActivity extends Activity {
         content.addView(rewardCard, cardLayoutParams());
 
         LinearLayout gameCard = createCard();
-        gameCard.addView(createSectionTitle("热门小游戏"), fullWidthWrapContent());
+        gameCard.addView(createSectionHeader("热门小游戏", "主推尖刺蛇，后续可扩展更多游戏"), fullWidthWrapContent());
         gameStatusText = createBodyText(getString(R.string.spiky_snake_intro));
         gameCard.addView(gameStatusText, fullWidthWrapContent());
 
         LinearLayout snakePanel = createInsetPanel(Color.rgb(246, 251, 249), Color.rgb(206, 231, 224));
-        snakePanel.addView(createSmallCaps("主推 · 手速挑战"), fullWidthWrapContent());
+        LinearLayout snakeHeader = createHorizontalRow();
+        snakeHeader.setGravity(Gravity.CENTER_VERTICAL);
+        TextView snakeBadge = createStatusChip("主推 · 手速挑战", Color.rgb(230, 247, 241), Color.rgb(177, 221, 208));
+        snakeHeader.addView(snakeBadge, weightedParams(1f, 0));
+        TextView snakeReward = createStatusChip("基础 8 金币", Color.rgb(255, 250, 232), Color.rgb(245, 222, 142));
+        snakeHeader.addView(snakeReward, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        snakePanel.addView(snakeHeader, fullWidthWrapContent());
         TextView snakeTitle = createTitle("尖刺蛇 Spiky Snake");
         snakeTitle.setTextSize(22);
         snakePanel.addView(snakeTitle, fullWidthWrapContent());
         snakePanel.addView(createBodyText("滑动控制方向，吃金币冲分，避开尖刺、墙壁和自己的身体。"), fullWidthWrapContent());
+        snakePanel.addView(createSnakePreview(), fullWidthWrapContent());
         Button spikySnakeButton = new Button(this);
         spikySnakeButton.setText(R.string.play_spiky_snake);
         stylePrimaryButton(spikySnakeButton);
@@ -220,7 +261,7 @@ public class MainActivity extends Activity {
         content.addView(gameCard, cardLayoutParams());
 
         LinearLayout profileCard = createCard();
-        profileCard.addView(createSectionTitle("个人中心"), fullWidthWrapContent());
+        profileCard.addView(createSectionHeader("个人中心", "账户、成长路线和金币流水"), fullWidthWrapContent());
         accountText = createBodyText("");
         profileCard.addView(accountText, fullWidthWrapContent());
         LinearLayout profilePlan = createInsetPanel(Color.rgb(247, 248, 255), Color.rgb(222, 224, 247));
@@ -569,6 +610,144 @@ public class MainActivity extends Activity {
         return row;
     }
 
+    private TextView createLogoBadge() {
+        TextView view = new TextView(this);
+        view.setText("CP");
+        view.setTextSize(18);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(Color.WHITE);
+        view.setGravity(Gravity.CENTER);
+        GradientDrawable background = new GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                new int[]{Color.rgb(14, 124, 102), Color.rgb(91, 75, 219)}
+        );
+        background.setCornerRadius(dp(16));
+        view.setBackground(background);
+        return view;
+    }
+
+    private TextView createLaunchChip(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(12);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(Color.rgb(235, 249, 245));
+        view.setGravity(Gravity.CENTER);
+        view.setPadding(dp(10), dp(8), dp(10), dp(8));
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.argb(28, 255, 255, 255));
+        background.setStroke(dp(1), Color.argb(72, 255, 255, 255));
+        background.setCornerRadius(dp(16));
+        view.setBackground(background);
+        return view;
+    }
+
+    private TextView createStatusChip(String text, int fillColor, int strokeColor) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(12);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(getColor(R.color.primary_text));
+        view.setGravity(Gravity.CENTER);
+        view.setPadding(dp(10), dp(7), dp(10), dp(7));
+        view.setBackground(insetBackground(fillColor, strokeColor, dp(999)));
+        return view;
+    }
+
+    private LinearLayout createSectionHeader(String title, String subtitle) {
+        LinearLayout header = createHorizontalRow();
+        header.setGravity(Gravity.CENTER_VERTICAL);
+
+        LinearLayout copy = new LinearLayout(this);
+        copy.setOrientation(LinearLayout.VERTICAL);
+        TextView titleView = createSectionTitle(title);
+        copy.addView(titleView, fullWidthWrapContent());
+        TextView subtitleView = createCaption(subtitle);
+        copy.addView(subtitleView, fullWidthWrapContent());
+        header.addView(copy, weightedParams(1f, 0));
+
+        TextView mark = createStatusChip("NEW", Color.rgb(230, 247, 241), Color.rgb(177, 221, 208));
+        header.addView(mark, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        return header;
+    }
+
+    private LinearLayout createTaskRow(String number, String title, String description) {
+        LinearLayout row = createHorizontalRow();
+        row.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView numberView = new TextView(this);
+        numberView.setText(number);
+        numberView.setTextSize(14);
+        numberView.setTypeface(Typeface.DEFAULT_BOLD);
+        numberView.setTextColor(Color.WHITE);
+        numberView.setGravity(Gravity.CENTER);
+        GradientDrawable numberBackground = new GradientDrawable();
+        numberBackground.setColor(getColor(R.color.brand_green));
+        numberBackground.setCornerRadius(dp(999));
+        numberView.setBackground(numberBackground);
+        row.addView(numberView, new LinearLayout.LayoutParams(dp(34), dp(34)));
+
+        LinearLayout copy = new LinearLayout(this);
+        copy.setOrientation(LinearLayout.VERTICAL);
+        copy.setPadding(dp(12), 0, 0, 0);
+        TextView titleView = createBodyText(title);
+        titleView.setTextColor(getColor(R.color.primary_text));
+        titleView.setTypeface(Typeface.DEFAULT_BOLD);
+        copy.addView(titleView, fullWidthWrapContent());
+        copy.addView(createCaption(description), fullWidthWrapContent());
+        row.addView(copy, weightedParams(1f, 0));
+        return row;
+    }
+
+    private LinearLayout createSnakePreview() {
+        LinearLayout board = new LinearLayout(this);
+        board.setOrientation(LinearLayout.VERTICAL);
+        board.setPadding(dp(10), dp(10), dp(10), dp(10));
+        board.setBackground(insetBackground(Color.rgb(238, 248, 244), Color.rgb(206, 231, 224), dp(18)));
+        int[][] pattern = {
+                {0, 0, 3, 0, 0, 2},
+                {0, 0, 3, 3, 3, 0},
+                {2, 0, 0, 0, 3, 0},
+                {0, 1, 0, 0, 3, 0}
+        };
+        for (int rowIndex = 0; rowIndex < pattern.length; rowIndex++) {
+            LinearLayout row = createHorizontalRow();
+            for (int column = 0; column < pattern[rowIndex].length; column++) {
+                row.addView(createBoardSquare(pattern[rowIndex][column]), weightedParams(1f, column == 0 ? 0 : dp(4)));
+            }
+            board.addView(row, fullWidthWrapContent());
+        }
+        return board;
+    }
+
+    private TextView createBoardSquare(int type) {
+        TextView square = new TextView(this);
+        square.setGravity(Gravity.CENTER);
+        square.setTextSize(10);
+        GradientDrawable background = new GradientDrawable();
+        if (type == 1) {
+            square.setText("G");
+            square.setTextColor(Color.WHITE);
+            background.setColor(getColor(R.color.coin_gold));
+        } else if (type == 2) {
+            square.setText("X");
+            square.setTextColor(Color.WHITE);
+            background.setColor(getColor(R.color.danger_red));
+        } else if (type == 3) {
+            background.setColor(getColor(R.color.brand_green));
+        } else {
+            background.setColor(Color.WHITE);
+        }
+        background.setCornerRadius(dp(8));
+        background.setStroke(dp(1), Color.rgb(221, 234, 229));
+        square.setBackground(background);
+        square.setMinHeight(dp(26));
+        return square;
+    }
+
     private TextView createSmallCaps(String text) {
         TextView view = new TextView(this);
         view.setText(text);
@@ -645,6 +824,7 @@ public class MainActivity extends Activity {
         background.setCornerRadius(dp(18));
         button.setBackground(background);
         button.setAllCaps(false);
+        button.setMinHeight(dp(48));
     }
 
     private void styleSecondaryButton(Button button) {
@@ -656,13 +836,17 @@ public class MainActivity extends Activity {
         background.setCornerRadius(dp(18));
         button.setBackground(background);
         button.setAllCaps(false);
+        button.setMinHeight(dp(48));
     }
 
     private GradientDrawable accentCardBackground() {
-        return new GradientDrawable(
+        GradientDrawable drawable = new GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
                 new int[]{Color.rgb(255, 253, 244), Color.rgb(232, 246, 241)}
         );
+        drawable.setCornerRadius(dp(22));
+        drawable.setStroke(dp(1), Color.rgb(221, 234, 229));
+        return drawable;
     }
 
     private GradientDrawable startupBackground() {
