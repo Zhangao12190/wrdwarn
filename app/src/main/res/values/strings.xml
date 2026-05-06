@@ -38,7 +38,7 @@
     <string name="profile_title">个人中心</string>
     <string name="profile_subtitle">测试版先用游客账户演示余额。正式版需要手机号/邮箱登录、后端账本、提现审核和反作弊。</string>
     <string name="profile_plan">兼职成长路线：玩游戏积累金币 · 每日任务 · 邀请活动 · 提现审核</string>
-    <string name="request_withdrawal">提现申请</string>
+    <string name="request_withdrawal">支付宝提现申请</string>
     <string name="compliance_title">合规说明</string>
     <string name="ledger_title">金币流水</string>
     <string name="balance_format">当前余额：%1$s 金币</string>

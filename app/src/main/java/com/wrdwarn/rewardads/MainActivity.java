@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -46,6 +48,7 @@ public class MainActivity extends Activity {
     private TextView gameStatusText;
     private TextView statusText;
     private TextView historyText;
+    private TextView withdrawalText;
     private ProgressBar adLoadingProgress;
     private Button claimRewardButton;
     private Button withdrawButton;
@@ -268,6 +271,10 @@ public class MainActivity extends Activity {
         profilePlan.addView(createSmallCaps("成长路线"), fullWidthWrapContent());
         profilePlan.addView(createBodyText("小游戏金币 · 每日任务 · 邀请活动 · 提现审核 · 反作弊风控"), fullWidthWrapContent());
         profileCard.addView(profilePlan, fullWidthWrapContent());
+        LinearLayout alipayPlan = createInsetPanel(Color.rgb(246, 251, 249), Color.rgb(206, 231, 224));
+        alipayPlan.addView(createSmallCaps("支付宝提现"), fullWidthWrapContent());
+        alipayPlan.addView(createBodyText("当前版本先提交申请并冻结金币，正式版需要后端审核后调用支付宝企业转账接口。"), fullWidthWrapContent());
+        profileCard.addView(alipayPlan, fullWidthWrapContent());
         withdrawButton = new Button(this);
         withdrawButton.setText(R.string.request_withdrawal);
         styleSecondaryButton(withdrawButton);
@@ -288,6 +295,14 @@ public class MainActivity extends Activity {
         historyText.setMinLines(4);
         historyText.setMaxLines(8);
         profileCard.addView(historyText, fullWidthWrapContent());
+        TextView withdrawalTitle = createSectionTitle("提现申请记录");
+        withdrawalTitle.setTextSize(18);
+        profileCard.addView(withdrawalTitle, fullWidthWrapContent());
+        withdrawalText = createCaption("");
+        withdrawalText.setMinLines(2);
+        withdrawalText.setMaxLines(6);
+        withdrawalText.setMovementMethod(new ScrollingMovementMethod());
+        profileCard.addView(withdrawalText, fullWidthWrapContent());
         content.addView(profileCard, cardLayoutParams());
 
         setContentView(scrollView);
@@ -448,18 +463,81 @@ public class MainActivity extends Activity {
 
     private void showWithdrawalDialog() {
         int balance = ledger.getBalance();
-        String message;
         if (balance < MIN_WITHDRAW_COINS) {
-            message = getString(R.string.withdrawal_not_enough, MIN_WITHDRAW_COINS, balance);
-        } else {
-            message = getString(R.string.withdrawal_ready, balance);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.request_withdrawal)
+                    .setMessage(getString(R.string.withdrawal_not_enough, MIN_WITHDRAW_COINS, balance))
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+            return;
         }
 
-        new AlertDialog.Builder(this)
+        LinearLayout form = new LinearLayout(this);
+        form.setOrientation(LinearLayout.VERTICAL);
+        form.setPadding(dp(8), dp(4), dp(8), 0);
+
+        TextView warning = createCaption("测试版只创建“审核中”的提现申请，不会从客户端自动打款。真实自动打款必须由后端审核后调用支付宝企业转账接口。");
+        form.addView(warning, fullWidthWrapContent());
+
+        EditText nameInput = new EditText(this);
+        nameInput.setHint("支付宝实名姓名");
+        nameInput.setSingleLine(true);
+        form.addView(nameInput, fullWidthWrapContent());
+
+        EditText accountInput = new EditText(this);
+        accountInput.setHint("支付宝账号（手机号或邮箱）");
+        accountInput.setSingleLine(true);
+        accountInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        form.addView(accountInput, fullWidthWrapContent());
+
+        EditText amountInput = new EditText(this);
+        amountInput.setHint("提现金币数量，最低 " + MIN_WITHDRAW_COINS);
+        amountInput.setSingleLine(true);
+        amountInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        amountInput.setText(String.valueOf(MIN_WITHDRAW_COINS));
+        form.addView(amountInput, fullWidthWrapContent());
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.request_withdrawal)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+                .setView(form)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton("提交申请", null)
+                .create();
+        dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            String realName = nameInput.getText().toString().trim();
+            String alipayAccount = accountInput.getText().toString().trim();
+            String amountText = amountInput.getText().toString().trim();
+            if (realName.isEmpty() || alipayAccount.isEmpty() || amountText.isEmpty()) {
+                Toast.makeText(this, "请填写姓名、支付宝账号和提现金币数量。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int amount;
+            try {
+                amount = Integer.parseInt(amountText);
+            } catch (NumberFormatException exception) {
+                Toast.makeText(this, "提现金币数量格式不正确。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (amount < MIN_WITHDRAW_COINS) {
+                Toast.makeText(this, "最低提现 " + MIN_WITHDRAW_COINS + " 金币。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (amount > ledger.getBalance()) {
+                Toast.makeText(this, "账户金币不足，无法提交提现申请。", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (ledger.submitWithdrawal(realName, alipayAccount, amount)) {
+                refreshUi("支付宝提现申请已提交，金币已进入审核冻结状态。");
+                Toast.makeText(this, "提现申请已提交，等待人工/后端审核。", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            } else {
+                Toast.makeText(this, "提交失败，请检查余额后重试。", Toast.LENGTH_SHORT).show();
+            }
+        }));
+        dialog.show();
     }
 
     private void showComplianceDialog() {
@@ -493,6 +571,9 @@ public class MainActivity extends Activity {
         balanceText.setText(numberFormat.format(ledger.getBalance()));
         pendingRewardText.setText(numberFormat.format(ledger.getPendingReward()) + " 金币");
         historyText.setText(ledger.getHistoryText());
+        if (withdrawalText != null) {
+            withdrawalText.setText(ledger.getWithdrawalHistoryText());
+        }
         withdrawButton.setEnabled(ledger.getBalance() >= MIN_WITHDRAW_COINS);
         statusText.setText(status);
         if (!isLoadingAd) {
