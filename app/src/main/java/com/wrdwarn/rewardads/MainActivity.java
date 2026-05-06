@@ -29,6 +29,8 @@ import java.util.Random;
 public class MainActivity extends Activity {
     private static final int GUESS_GAME_WIN_REWARD = 30;
     private static final int GUESS_GAME_PLAY_REWARD = 5;
+    private static final int SPIKY_SNAKE_BASE_REWARD = 8;
+    private static final int SPIKY_SNAKE_REWARD_PER_COIN = 6;
     private static final int MIN_WITHDRAW_COINS = 1000;
     private static final String TEST_REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917";
 
@@ -103,10 +105,15 @@ public class MainActivity extends Activity {
         root.addView(gamesTitle, fullWidthWrapContent());
 
         gameStatusText = new TextView(this);
-        gameStatusText.setText(R.string.guess_game_intro);
+        gameStatusText.setText(R.string.spiky_snake_intro);
         gameStatusText.setTextColor(getColor(R.color.secondary_text));
         gameStatusText.setGravity(Gravity.CENTER);
         root.addView(gameStatusText, fullWidthWrapContent());
+
+        Button spikySnakeButton = new Button(this);
+        spikySnakeButton.setText(R.string.play_spiky_snake);
+        spikySnakeButton.setOnClickListener(view -> showSpikySnakeGame());
+        root.addView(spikySnakeButton, fullWidthWrapContent());
 
         Button guessGameButton = new Button(this);
         guessGameButton.setText(R.string.play_guess_game);
@@ -271,6 +278,43 @@ public class MainActivity extends Activity {
         ledger.setPendingReward("小游戏：幸运猜数字", reward);
         gameStatusText.setText(message);
         refreshUi("小游戏已完成，请观看激励广告领取 " + reward + " 金币。");
+    }
+
+    private void showSpikySnakeGame() {
+        if (ledger.getPendingReward() > 0) {
+            Toast.makeText(this, R.string.pending_reward_exists, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SpikySnakeGameView gameView = new SpikySnakeGameView(this);
+        AlertDialog gameDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.spiky_snake_title)
+                .setView(gameView)
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> gameView.stop())
+                .create();
+        gameView.setGameListener(new SpikySnakeGameView.GameListener() {
+            @Override
+            public void onScoreChanged(int score) {
+                gameDialog.setTitle(getString(R.string.spiky_snake_score_title, score));
+            }
+
+            @Override
+            public void onGameOver(int score) {
+                gameDialog.dismiss();
+                finishSpikySnakeGame(score);
+            }
+        });
+        gameDialog.setOnShowListener(dialog -> gameView.start());
+        gameDialog.setOnDismissListener(dialog -> gameView.stop());
+        gameDialog.show();
+    }
+
+    private void finishSpikySnakeGame(int score) {
+        int reward = SPIKY_SNAKE_BASE_REWARD + (score * SPIKY_SNAKE_REWARD_PER_COIN);
+        ledger.setPendingReward("小游戏：尖刺蛇，得分 " + score, reward);
+        String message = getString(R.string.spiky_snake_finished, score, reward);
+        gameStatusText.setText(message);
+        refreshUi("尖刺蛇已结束，请观看激励广告领取 " + reward + " 金币。");
     }
 
     private void showWithdrawalDialog() {

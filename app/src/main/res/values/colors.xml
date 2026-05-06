@@ -6,5 +6,6 @@
     <color name="primary_text">#15211D</color>
     <color name="secondary_text">#60736C</color>
     <color name="coin_gold">#F4B400</color>
+    <color name="danger_red">#D93025</color>
     <color name="accent">#0E7C66</color>
 </resources>

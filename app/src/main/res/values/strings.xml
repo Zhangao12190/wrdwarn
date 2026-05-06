@@ -4,9 +4,11 @@
     <string name="policy_notice">先玩小游戏产生奖励，再主动选择是否观看激励广告领取金币。本演示不会自动播放广告或诱导点击。</string>
     <string name="account_format">游客账户：%1$s</string>
     <string name="game_center_title">小游戏中心</string>
-    <string name="guess_game_intro">当前游戏：幸运猜数。点击开始后系统会生成 1、2、3 中的一个数字，猜中可获得 30 待领取金币，猜错也有 5 金币安慰奖。</string>
+    <string name="spiky_snake_intro">推荐先玩尖刺蛇：滑动控制蛇吃金币，避开尖刺和墙壁。游戏结束后，分数会变成待领取金币。</string>
+    <string name="guess_game_intro">推荐先玩尖刺蛇：滑动控制蛇吃金币，避开尖刺和墙壁。游戏结束后，分数会变成待领取金币。</string>
+    <string name="play_spiky_snake">开始尖刺蛇</string>
     <string name="play_guess_game">开始幸运猜数</string>
-    <string name="more_games_coming">后续可以继续添加更多小游戏，例如转盘、刮刮卡、答题、拼图等。</string>
+    <string name="more_games_coming">后续可以继续添加更多小游戏，例如转盘、刮刮卡、答题、拼图等。幸运猜数保留为轻量演示游戏。</string>
     <string name="pending_reward_format">待领取奖励：%1$s 金币</string>
     <string name="no_pending_reward">暂无待领取奖励，请先完成小游戏。</string>
     <string name="pending_reward_exists">你已有待领取奖励，请先观看广告领取后再玩下一局。</string>
@@ -15,6 +17,9 @@
     <string name="guess_game_prompt">请选择你猜的数字：</string>
     <string name="guess_game_win">恭喜猜中！正确数字是 %1$d，获得 %2$d 待领取金币。</string>
     <string name="guess_game_miss">这次没猜中，正确数字是 %1$d，获得 %2$d 安慰金币。</string>
+    <string name="spiky_snake_title">尖刺蛇</string>
+    <string name="spiky_snake_score_title">尖刺蛇 - 得分 %1$d</string>
+    <string name="spiky_snake_finished">尖刺蛇结束：分数 %1$d，获得 %2$d 待领取金币。观看激励广告后入账。</string>
     <string name="watch_rewarded_ad">观看广告领取游戏奖励</string>
     <string name="request_withdrawal">提现申请</string>
     <string name="compliance_title">合规说明</string>
