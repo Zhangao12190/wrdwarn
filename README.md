@@ -52,18 +52,23 @@ releases/wrdwarn-reward-ads-debug.apk
 
 这是开发测试版本，使用 Google 官方测试广告位，不适合直接上线发布。
 
-如果 GitHub 下载慢或经常失败：
-
-- 当前仓库是私有仓库，公共镜像源无法直接读取 APK。
-- 登录 GitHub 后仍可使用仓库原始下载链接。
-- 如果要使用镜像/CDN 加速，需要先把仓库改为公开，或把 APK 上传到公开对象存储/网盘。
-- 仓库公开后可尝试 jsDelivr 镜像格式：
+如果 GitHub 下载慢或经常失败，可以使用已验证的 jsDelivr 镜像：
 
 ```text
-https://cdn.jsdelivr.net/gh/Zhangao12190/wrdwarn@cursor/android-reward-ads-mvp-e83e/releases/wrdwarn-reward-ads-debug.apk
+https://cdn.jsdelivr.net/gh/Zhangao12190/wrdwarn@2bee1cf7d63048bdb6d7bb6c924ac611c173a9dd/releases/wrdwarn-reward-ads-debug.apk
 ```
 
-- 也可以把 APK 上传到阿里云 OSS、腾讯云 COS、Cloudflare R2、蓝奏云等公开下载地址，手机端会比私有 GitHub 下载稳定。
+也可以使用 GitHub Raw 原始下载：
+
+```text
+https://raw.githubusercontent.com/Zhangao12190/wrdwarn/2bee1cf7d63048bdb6d7bb6c924ac611c173a9dd/releases/wrdwarn-reward-ads-debug.apk
+```
+
+当前 APK SHA-256：
+
+```text
+db1e385ca7ff723193c16fe0d87c8a8205376406f55806e867ff02977c7c6b96
+```
 
 ## 下一步建议
 
