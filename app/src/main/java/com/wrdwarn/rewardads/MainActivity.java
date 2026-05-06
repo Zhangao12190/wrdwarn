@@ -2,6 +2,9 @@ package com.wrdwarn.rewardads;
 
 import android.app.AlertDialog;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +50,7 @@ public class MainActivity extends Activity {
     private Button claimRewardButton;
     private Button withdrawButton;
     private boolean isLoadingAd;
+    private String latestStatus = "正在初始化广告 SDK...";
     private final Random random = new Random();
 
     @Override
@@ -53,121 +58,170 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         ledger = new RewardLedger(this);
-        buildLayout();
-        refreshUi("正在初始化广告 SDK...");
-
+        buildLaunchLayout();
         MobileAds.initialize(this, initializationStatus -> loadRewardedAd());
     }
 
-    private void buildLayout() {
+    private void buildLaunchLayout() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setGravity(Gravity.CENTER_HORIZONTAL);
-        int padding = dp(20);
+        root.setGravity(Gravity.CENTER);
+        int padding = dp(24);
         root.setPadding(padding, padding, padding, padding);
-        root.setBackgroundColor(getColor(R.color.screen_background));
+        root.setBackground(startupBackground());
+
+        TextView label = new TextView(this);
+        label.setText("CAMPUS PLAY HUB");
+        label.setTextColor(Color.rgb(255, 221, 107));
+        label.setTextSize(14);
+        label.setTypeface(Typeface.DEFAULT_BOLD);
+        label.setGravity(Gravity.CENTER);
+        root.addView(label, fullWidthWrapContent());
 
         TextView title = new TextView(this);
-        title.setText(R.string.app_name);
-        title.setTextAppearance(android.R.style.TextAppearance_Material_Large);
-        title.setTextColor(getColor(R.color.primary_text));
+        title.setText("课余小游戏\n外快灵感站");
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(34);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setGravity(Gravity.CENTER);
+        title.setLineSpacing(0, 1.05f);
         root.addView(title, fullWidthWrapContent());
 
-        TextView policyNotice = new TextView(this);
-        policyNotice.setText(R.string.policy_notice);
-        policyNotice.setTextColor(getColor(R.color.secondary_text));
-        policyNotice.setPadding(0, dp(12), 0, dp(12));
-        root.addView(policyNotice, fullWidthWrapContent());
+        TextView slogan = new TextView(this);
+        slogan.setText("给大学生和在家兼职的人准备：先玩轻量小游戏，完成挑战后观看激励广告领取金币。");
+        slogan.setTextColor(Color.rgb(224, 241, 236));
+        slogan.setTextSize(16);
+        slogan.setGravity(Gravity.CENTER);
+        slogan.setPadding(0, dp(16), 0, dp(12));
+        root.addView(slogan, fullWidthWrapContent());
 
-        accountText = new TextView(this);
-        accountText.setTextColor(getColor(R.color.secondary_text));
-        accountText.setGravity(Gravity.CENTER);
-        root.addView(accountText, fullWidthWrapContent());
+        TextView note = new TextView(this);
+        note.setText("当前是商业模型测试版：金币和提现为演示流程，正式上线前需要后端审核、风控和广告平台合规。");
+        note.setTextColor(Color.rgb(178, 211, 202));
+        note.setTextSize(13);
+        note.setGravity(Gravity.CENTER);
+        root.addView(note, fullWidthWrapContent());
 
-        balanceText = new TextView(this);
-        balanceText.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-        balanceText.setTextColor(getColor(R.color.primary_text));
-        balanceText.setGravity(Gravity.CENTER);
-        root.addView(balanceText, fullWidthWrapContent());
+        Button enterButton = new Button(this);
+        enterButton.setText("进入游戏中心");
+        stylePrimaryButton(enterButton);
+        enterButton.setOnClickListener(view -> {
+            buildGameCenterLayout();
+            refreshUi(latestStatus);
+        });
+        root.addView(enterButton, fullWidthWrapContent());
 
-        pendingRewardText = new TextView(this);
-        pendingRewardText.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
+        setContentView(root);
+    }
+
+    private void buildGameCenterLayout() {
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setFillViewport(true);
+        scrollView.setBackground(screenBackground());
+
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setPadding(dp(16), dp(18), dp(16), dp(18));
+        scrollView.addView(content, new ScrollView.LayoutParams(
+                ScrollView.LayoutParams.MATCH_PARENT,
+                ScrollView.LayoutParams.WRAP_CONTENT
+        ));
+
+        LinearLayout heroCard = createCard();
+        heroCard.setBackground(heroBackground());
+        TextView eyebrow = createSmallCaps("STUDENT SIDE QUESTS");
+        eyebrow.setTextColor(Color.rgb(255, 221, 107));
+        heroCard.addView(eyebrow, fullWidthWrapContent());
+
+        TextView heroTitle = createTitle("课余游戏中心");
+        heroTitle.setTextColor(Color.WHITE);
+        heroTitle.setTextSize(28);
+        heroCard.addView(heroTitle, fullWidthWrapContent());
+
+        TextView heroSubtitle = createBodyText("在宿舍、通勤或家里，用碎片时间玩小游戏、攒金币、验证你的兼职副业模型。");
+        heroSubtitle.setTextColor(Color.rgb(224, 241, 236));
+        heroCard.addView(heroSubtitle, fullWidthWrapContent());
+        content.addView(heroCard, cardLayoutParams());
+
+        LinearLayout accountCard = createCard();
+        accountCard.addView(createSectionTitle("个人中心"), fullWidthWrapContent());
+        accountText = createBodyText("");
+        balanceText = createMetricText("");
+        pendingRewardText = createMetricText("");
         pendingRewardText.setTextColor(getColor(R.color.coin_gold));
-        pendingRewardText.setGravity(Gravity.CENTER);
-        root.addView(pendingRewardText, fullWidthWrapContent());
+        accountCard.addView(accountText, fullWidthWrapContent());
+        accountCard.addView(balanceText, fullWidthWrapContent());
+        accountCard.addView(pendingRewardText, fullWidthWrapContent());
+        TextView accountTip = createCaption("适合大学生/居家兼职人群的体验账户。真实版本会接入手机号登录、实名审核和提现风控。");
+        accountCard.addView(accountTip, fullWidthWrapContent());
+        content.addView(accountCard, cardLayoutParams());
 
-        TextView gamesTitle = new TextView(this);
-        gamesTitle.setText(R.string.game_center_title);
-        gamesTitle.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-        gamesTitle.setTextColor(getColor(R.color.primary_text));
-        gamesTitle.setPadding(0, dp(12), 0, dp(4));
-        root.addView(gamesTitle, fullWidthWrapContent());
-
-        gameStatusText = new TextView(this);
-        gameStatusText.setText(R.string.spiky_snake_intro);
-        gameStatusText.setTextColor(getColor(R.color.secondary_text));
-        gameStatusText.setGravity(Gravity.CENTER);
-        root.addView(gameStatusText, fullWidthWrapContent());
+        LinearLayout gameCard = createCard();
+        gameCard.addView(createSectionTitle("热门小游戏"), fullWidthWrapContent());
+        TextView gameName = createTitle("尖刺蛇挑战");
+        gameName.setTextSize(22);
+        gameCard.addView(gameName, fullWidthWrapContent());
+        gameStatusText = createBodyText(getString(R.string.spiky_snake_intro));
+        gameCard.addView(gameStatusText, fullWidthWrapContent());
 
         Button spikySnakeButton = new Button(this);
         spikySnakeButton.setText(R.string.play_spiky_snake);
+        stylePrimaryButton(spikySnakeButton);
         spikySnakeButton.setOnClickListener(view -> showSpikySnakeGame());
-        root.addView(spikySnakeButton, fullWidthWrapContent());
+        gameCard.addView(spikySnakeButton, fullWidthWrapContent());
 
         Button guessGameButton = new Button(this);
         guessGameButton.setText(R.string.play_guess_game);
+        styleSecondaryButton(guessGameButton);
         guessGameButton.setOnClickListener(view -> showGuessGameDialog());
-        root.addView(guessGameButton, fullWidthWrapContent());
+        gameCard.addView(guessGameButton, fullWidthWrapContent());
 
-        TextView moreGamesText = new TextView(this);
-        moreGamesText.setText(R.string.more_games_coming);
-        moreGamesText.setTextColor(getColor(R.color.secondary_text));
-        moreGamesText.setGravity(Gravity.CENTER);
-        root.addView(moreGamesText, fullWidthWrapContent());
+        TextView moreGamesText = createCaption("后续扩展：转盘、刮刮卡、答题、拼图、排行榜、每日任务。");
+        gameCard.addView(moreGamesText, fullWidthWrapContent());
+        content.addView(gameCard, cardLayoutParams());
 
+        LinearLayout rewardCard = createCard();
+        rewardCard.addView(createSectionTitle("奖励领取"), fullWidthWrapContent());
+        TextView rewardCopy = createBodyText("完成小游戏后，奖励会先进入“待领取”。你需要主动观看一次激励广告，广告 SDK 确认后才会入账。");
+        rewardCard.addView(rewardCopy, fullWidthWrapContent());
         adLoadingProgress = new ProgressBar(this);
         adLoadingProgress.setIndeterminate(true);
-        root.addView(adLoadingProgress, wrapContentCentered());
-
-        statusText = new TextView(this);
-        statusText.setTextColor(getColor(R.color.secondary_text));
+        rewardCard.addView(adLoadingProgress, wrapContentCentered());
+        statusText = createCaption("");
         statusText.setGravity(Gravity.CENTER);
-        statusText.setPadding(0, dp(8), 0, dp(8));
-        root.addView(statusText, fullWidthWrapContent());
-
+        rewardCard.addView(statusText, fullWidthWrapContent());
         claimRewardButton = new Button(this);
         claimRewardButton.setText(R.string.claim_game_reward);
+        stylePrimaryButton(claimRewardButton);
         claimRewardButton.setOnClickListener(view -> showRewardedAd());
-        root.addView(claimRewardButton, fullWidthWrapContent());
+        rewardCard.addView(claimRewardButton, fullWidthWrapContent());
+        content.addView(rewardCard, cardLayoutParams());
 
+        LinearLayout profileCard = createCard();
+        profileCard.addView(createSectionTitle("我的账户"), fullWidthWrapContent());
         withdrawButton = new Button(this);
         withdrawButton.setText(R.string.request_withdrawal);
+        styleSecondaryButton(withdrawButton);
         withdrawButton.setOnClickListener(view -> showWithdrawalDialog());
-        root.addView(withdrawButton, fullWidthWrapContent());
+        profileCard.addView(withdrawButton, fullWidthWrapContent());
 
         Button complianceButton = new Button(this);
         complianceButton.setText(R.string.compliance_title);
+        styleSecondaryButton(complianceButton);
         complianceButton.setOnClickListener(view -> showComplianceDialog());
-        root.addView(complianceButton, fullWidthWrapContent());
+        profileCard.addView(complianceButton, fullWidthWrapContent());
 
-        TextView historyTitle = new TextView(this);
-        historyTitle.setText(R.string.ledger_title);
-        historyTitle.setTextAppearance(android.R.style.TextAppearance_Material_Medium);
-        historyTitle.setTextColor(getColor(R.color.primary_text));
-        historyTitle.setPadding(0, dp(16), 0, dp(8));
-        root.addView(historyTitle, fullWidthWrapContent());
-
-        historyText = new TextView(this);
-        historyText.setTextColor(getColor(R.color.secondary_text));
+        TextView historyTitle = createSectionTitle("金币流水");
+        historyTitle.setTextSize(18);
+        profileCard.addView(historyTitle, fullWidthWrapContent());
+        historyText = createCaption("");
         historyText.setMovementMethod(new ScrollingMovementMethod());
-        root.addView(historyText, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1f
-        ));
+        historyText.setMinLines(4);
+        historyText.setMaxLines(8);
+        profileCard.addView(historyText, fullWidthWrapContent());
+        content.addView(profileCard, cardLayoutParams());
 
-        setContentView(root);
+        setContentView(scrollView);
     }
 
     private void loadRewardedAd() {
@@ -214,7 +268,9 @@ public class MainActivity extends Activity {
 
             @Override
             public void onAdShowedFullScreenContent() {
-                statusText.setText(R.string.ad_showing);
+                if (statusText != null) {
+                    statusText.setText(R.string.ad_showing);
+                }
             }
         };
     }
@@ -276,7 +332,9 @@ public class MainActivity extends Activity {
         }
 
         ledger.setPendingReward("小游戏：幸运猜数字", reward);
-        gameStatusText.setText(message);
+        if (gameStatusText != null) {
+            gameStatusText.setText(message);
+        }
         refreshUi("小游戏已完成，请观看激励广告领取 " + reward + " 金币。");
     }
 
@@ -313,7 +371,9 @@ public class MainActivity extends Activity {
         int reward = SPIKY_SNAKE_BASE_REWARD + (score * SPIKY_SNAKE_REWARD_PER_COIN);
         ledger.setPendingReward("小游戏：尖刺蛇，得分 " + score, reward);
         String message = getString(R.string.spiky_snake_finished, score, reward);
-        gameStatusText.setText(message);
+        if (gameStatusText != null) {
+            gameStatusText.setText(message);
+        }
         refreshUi("尖刺蛇已结束，请观看激励广告领取 " + reward + " 金币。");
     }
 
@@ -342,19 +402,27 @@ public class MainActivity extends Activity {
     }
 
     private void setAdLoadingState(boolean loading, String status) {
+        isLoadingAd = loading;
+        latestStatus = status;
+        if (adLoadingProgress == null || claimRewardButton == null) {
+            return;
+        }
+
         adLoadingProgress.setVisibility(loading ? View.VISIBLE : View.GONE);
         claimRewardButton.setEnabled(!loading && rewardedAd != null && ledger.getPendingReward() > 0);
         refreshUi(status);
     }
 
     private void refreshUi(String status) {
+        latestStatus = status;
+        if (balanceText == null || pendingRewardText == null || historyText == null) {
+            return;
+        }
+
         NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.CHINA);
-        accountText.setText(getString(R.string.account_format, ledger.getAccountId()));
-        balanceText.setText(getString(R.string.balance_format, numberFormat.format(ledger.getBalance())));
-        pendingRewardText.setText(getString(
-                R.string.pending_reward_format,
-                numberFormat.format(ledger.getPendingReward())
-        ));
+        accountText.setText("大学生体验账户\n" + ledger.getAccountId());
+        balanceText.setText("账户金币\n" + numberFormat.format(ledger.getBalance()));
+        pendingRewardText.setText("待领取任务奖励\n" + numberFormat.format(ledger.getPendingReward()) + " 金币");
         historyText.setText(ledger.getHistoryText());
         withdrawButton.setEnabled(ledger.getBalance() >= MIN_WITHDRAW_COINS);
         statusText.setText(status);
@@ -362,6 +430,131 @@ public class MainActivity extends Activity {
             claimRewardButton.setEnabled(rewardedAd != null && ledger.getPendingReward() > 0);
             adLoadingProgress.setVisibility(View.GONE);
         }
+    }
+
+    private LinearLayout createCard() {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(18), dp(18), dp(18), dp(18));
+        card.setBackground(cardBackground());
+        return card;
+    }
+
+    private TextView createSmallCaps(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(12);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setLetterSpacing(0.12f);
+        return view;
+    }
+
+    private TextView createTitle(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(24);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(getColor(R.color.primary_text));
+        return view;
+    }
+
+    private TextView createSectionTitle(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(20);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(getColor(R.color.primary_text));
+        return view;
+    }
+
+    private TextView createMetricText(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(20);
+        view.setTypeface(Typeface.DEFAULT_BOLD);
+        view.setTextColor(getColor(R.color.primary_text));
+        view.setGravity(Gravity.CENTER);
+        view.setPadding(0, dp(8), 0, dp(8));
+        return view;
+    }
+
+    private TextView createBodyText(String text) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(15);
+        view.setLineSpacing(0, 1.15f);
+        view.setTextColor(getColor(R.color.secondary_text));
+        return view;
+    }
+
+    private TextView createCaption(String text) {
+        TextView view = createBodyText(text);
+        view.setTextSize(13);
+        return view;
+    }
+
+    private void stylePrimaryButton(Button button) {
+        button.setTextColor(Color.WHITE);
+        button.setTextSize(15);
+        button.setTypeface(Typeface.DEFAULT_BOLD);
+        GradientDrawable background = new GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[]{getColor(R.color.brand_green), getColor(R.color.brand_green_dark)}
+        );
+        background.setCornerRadius(dp(18));
+        button.setBackground(background);
+        button.setAllCaps(false);
+    }
+
+    private void styleSecondaryButton(Button button) {
+        button.setTextColor(getColor(R.color.brand_green_dark));
+        button.setTextSize(15);
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.rgb(232, 245, 241));
+        background.setStroke(dp(1), Color.rgb(181, 219, 209));
+        background.setCornerRadius(dp(18));
+        button.setBackground(background);
+        button.setAllCaps(false);
+    }
+
+    private GradientDrawable startupBackground() {
+        return new GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                new int[]{Color.rgb(4, 40, 48), Color.rgb(10, 99, 89), Color.rgb(7, 91, 74)}
+        );
+    }
+
+    private GradientDrawable screenBackground() {
+        return new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{Color.rgb(232, 246, 241), Color.rgb(248, 251, 249)}
+        );
+    }
+
+    private GradientDrawable heroBackground() {
+        GradientDrawable drawable = new GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                new int[]{Color.rgb(6, 49, 61), Color.rgb(14, 124, 102)}
+        );
+        drawable.setCornerRadius(dp(24));
+        return drawable;
+    }
+
+    private GradientDrawable cardBackground() {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(getColor(R.color.surface));
+        drawable.setCornerRadius(dp(22));
+        drawable.setStroke(dp(1), Color.rgb(221, 234, 229));
+        return drawable;
+    }
+
+    private LinearLayout.LayoutParams cardLayoutParams() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, 0, dp(14));
+        return params;
     }
 
     private LinearLayout.LayoutParams fullWidthWrapContent() {

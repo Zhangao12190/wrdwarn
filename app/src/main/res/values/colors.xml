@@ -1,11 +1,17 @@
 <resources>
     <color name="brand_green">#0E7C66</color>
     <color name="brand_green_dark">#075B4A</color>
+    <color name="brand_purple">#5B4BDB</color>
     <color name="screen_background">#F6F8F7</color>
+    <color name="splash_top">#101A3D</color>
+    <color name="splash_bottom">#0E7C66</color>
     <color name="surface">#FFFFFF</color>
+    <color name="card_stroke">#DDE8E3</color>
     <color name="primary_text">#15211D</color>
     <color name="secondary_text">#60736C</color>
     <color name="coin_gold">#F4B400</color>
     <color name="danger_red">#D93025</color>
+    <color name="soft_green">#E5F3EF</color>
+    <color name="button_secondary">#E5F3EF</color>
     <color name="accent">#0E7C66</color>
 </resources>
