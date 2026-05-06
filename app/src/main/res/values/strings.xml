@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">WrdWarn Rewards</string>
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="policy_notice">请主动选择是否观看激励广告。完整观看后才会发放金币，本演示不会自动播放广告或诱导点击。</string>
+    <string name="watch_rewarded_ad">观看激励广告赚金币</string>
+    <string name="request_withdrawal">提现申请</string>
+    <string name="compliance_title">合规说明</string>
+    <string name="ledger_title">金币流水</string>
+    <string name="balance_format">当前余额：%1$s 金币</string>
+    <string name="ad_showing">广告正在展示，请按广告页面提示操作。</string>
+    <string name="ad_not_ready">广告还没有准备好，请稍后再试。</string>
+    <string name="empty_history">暂无金币流水。完成激励广告后会显示记录。</string>
+    <string name="withdrawal_not_enough">提现门槛为 %1$d 金币，你当前有 %2$d 金币。真实上线前需要接入后端审核和风控。</string>
+    <string name="withdrawal_ready">你当前有 %1$d 金币，可以提交提现申请。此版本仅演示入口，正式提现需要后端审核、风控和用户协议。</string>
+    <string name="compliance_message">本应用必须使用激励广告合规模式：用户主动点击观看；仅在广告 SDK 确认奖励后发放金币；禁止刷广告、自动播放、诱导点击和虚假收益承诺。上线前请补齐隐私政策、用户协议、提现规则、后端账本与反作弊。</string>
+</resources>
