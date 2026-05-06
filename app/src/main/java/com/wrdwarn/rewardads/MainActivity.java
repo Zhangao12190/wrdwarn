@@ -63,40 +63,50 @@ public class MainActivity extends Activity {
     }
 
     private void buildLaunchLayout() {
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setFillViewport(true);
+        scrollView.setBackground(startupBackground());
+
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER);
         int padding = dp(24);
         root.setPadding(padding, padding, padding, padding);
-        root.setBackground(startupBackground());
+        scrollView.addView(root, new ScrollView.LayoutParams(
+                ScrollView.LayoutParams.MATCH_PARENT,
+                ScrollView.LayoutParams.WRAP_CONTENT
+        ));
 
-        TextView label = new TextView(this);
-        label.setText("CAMPUS PLAY HUB");
-        label.setTextColor(Color.rgb(255, 221, 107));
-        label.setTextSize(14);
-        label.setTypeface(Typeface.DEFAULT_BOLD);
+        TextView label = createPill("CAMPUS PLAY HUB · BETA");
         label.setGravity(Gravity.CENTER);
-        root.addView(label, fullWidthWrapContent());
+        root.addView(label, wrapContentCentered());
 
         TextView title = new TextView(this);
-        title.setText("课余小游戏\n外快灵感站");
+        title.setText("课余玩一局\n把碎片时间变金币");
         title.setTextColor(Color.WHITE);
-        title.setTextSize(34);
+        title.setTextSize(32);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setGravity(Gravity.CENTER);
         title.setLineSpacing(0, 1.05f);
         root.addView(title, fullWidthWrapContent());
 
         TextView slogan = new TextView(this);
-        slogan.setText("给大学生和在家兼职的人准备：先玩轻量小游戏，完成挑战后观看激励广告领取金币。");
+        slogan.setText("面向大学生、居家兼职和想尝试外快副业的人：先玩轻量小游戏，再主动观看激励广告领取奖励。");
         slogan.setTextColor(Color.rgb(224, 241, 236));
         slogan.setTextSize(16);
         slogan.setGravity(Gravity.CENTER);
-        slogan.setPadding(0, dp(16), 0, dp(12));
+        slogan.setLineSpacing(0, 1.18f);
+        slogan.setPadding(0, dp(14), 0, dp(12));
         root.addView(slogan, fullWidthWrapContent());
 
+        LinearLayout routeCard = createGlassCard();
+        routeCard.addView(createLaunchStep("01", "玩尖刺蛇", "滑动控制蛇吃金币，避开尖刺和墙壁。"), fullWidthWrapContent());
+        routeCard.addView(createLaunchStep("02", "生成待领取金币", "小游戏结束后，分数会换成待领取奖励。"), fullWidthWrapContent());
+        routeCard.addView(createLaunchStep("03", "看激励广告入账", "广告 SDK 确认后，金币进入体验账户。"), fullWidthWrapContent());
+        root.addView(routeCard, cardLayoutParams());
+
         TextView note = new TextView(this);
-        note.setText("当前是商业模型测试版：金币和提现为演示流程，正式上线前需要后端审核、风控和广告平台合规。");
+        note.setText("当前是商业模型测试版：金币和提现为演示流程，不承诺真实收益。正式上线前需要后端审核、风控和广告平台合规。");
         note.setTextColor(Color.rgb(178, 211, 202));
         note.setTextSize(13);
         note.setGravity(Gravity.CENTER);
@@ -111,7 +121,7 @@ public class MainActivity extends Activity {
         });
         root.addView(enterButton, fullWidthWrapContent());
 
-        setContentView(root);
+        setContentView(scrollView);
     }
 
     private void buildGameCenterLayout() {
@@ -121,7 +131,7 @@ public class MainActivity extends Activity {
 
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setPadding(dp(16), dp(18), dp(16), dp(18));
+        content.setPadding(dp(16), dp(18), dp(16), dp(22));
         scrollView.addView(content, new ScrollView.LayoutParams(
                 ScrollView.LayoutParams.MATCH_PARENT,
                 ScrollView.LayoutParams.WRAP_CONTENT
@@ -133,57 +143,34 @@ public class MainActivity extends Activity {
         eyebrow.setTextColor(Color.rgb(255, 221, 107));
         heroCard.addView(eyebrow, fullWidthWrapContent());
 
-        TextView heroTitle = createTitle("课余游戏中心");
+        TextView heroTitle = createTitle("校园轻兼职游戏中心");
         heroTitle.setTextColor(Color.WHITE);
-        heroTitle.setTextSize(28);
+        heroTitle.setTextSize(27);
         heroCard.addView(heroTitle, fullWidthWrapContent());
 
-        TextView heroSubtitle = createBodyText("在宿舍、通勤或家里，用碎片时间玩小游戏、攒金币、验证你的兼职副业模型。");
+        TextView heroSubtitle = createBodyText("在宿舍、通勤或家里，用碎片时间玩小游戏、攒金币，验证“游戏 + 激励广告”的副业模型。");
         heroSubtitle.setTextColor(Color.rgb(224, 241, 236));
         heroCard.addView(heroSubtitle, fullWidthWrapContent());
+
+        LinearLayout heroStats = createHorizontalRow();
+        heroStats.addView(createHeroStat("2", "已接入游戏"), weightedParams(1f, 0));
+        heroStats.addView(createHeroStat("广告", "领取奖励"), weightedParams(1f, dp(8)));
+        heroStats.addView(createHeroStat("Beta", "模型测试"), weightedParams(1f, dp(8)));
+        heroCard.addView(heroStats, fullWidthWrapContent());
         content.addView(heroCard, cardLayoutParams());
 
-        LinearLayout accountCard = createCard();
-        accountCard.addView(createSectionTitle("个人中心"), fullWidthWrapContent());
-        accountText = createBodyText("");
+        LinearLayout rewardCard = createCard();
+        rewardCard.setBackground(accentCardBackground());
+        rewardCard.addView(createSectionTitle("今日奖励面板"), fullWidthWrapContent());
+        TextView rewardCopy = createBodyText("完成小游戏后，奖励会先进入“待领取”。观看激励广告成功后，金币才会进入账户。");
+        rewardCard.addView(rewardCopy, fullWidthWrapContent());
+        LinearLayout rewardStats = createHorizontalRow();
         balanceText = createMetricText("");
         pendingRewardText = createMetricText("");
         pendingRewardText.setTextColor(getColor(R.color.coin_gold));
-        accountCard.addView(accountText, fullWidthWrapContent());
-        accountCard.addView(balanceText, fullWidthWrapContent());
-        accountCard.addView(pendingRewardText, fullWidthWrapContent());
-        TextView accountTip = createCaption("适合大学生/居家兼职人群的体验账户。真实版本会接入手机号登录、实名审核和提现风控。");
-        accountCard.addView(accountTip, fullWidthWrapContent());
-        content.addView(accountCard, cardLayoutParams());
-
-        LinearLayout gameCard = createCard();
-        gameCard.addView(createSectionTitle("热门小游戏"), fullWidthWrapContent());
-        TextView gameName = createTitle("尖刺蛇挑战");
-        gameName.setTextSize(22);
-        gameCard.addView(gameName, fullWidthWrapContent());
-        gameStatusText = createBodyText(getString(R.string.spiky_snake_intro));
-        gameCard.addView(gameStatusText, fullWidthWrapContent());
-
-        Button spikySnakeButton = new Button(this);
-        spikySnakeButton.setText(R.string.play_spiky_snake);
-        stylePrimaryButton(spikySnakeButton);
-        spikySnakeButton.setOnClickListener(view -> showSpikySnakeGame());
-        gameCard.addView(spikySnakeButton, fullWidthWrapContent());
-
-        Button guessGameButton = new Button(this);
-        guessGameButton.setText(R.string.play_guess_game);
-        styleSecondaryButton(guessGameButton);
-        guessGameButton.setOnClickListener(view -> showGuessGameDialog());
-        gameCard.addView(guessGameButton, fullWidthWrapContent());
-
-        TextView moreGamesText = createCaption("后续扩展：转盘、刮刮卡、答题、拼图、排行榜、每日任务。");
-        gameCard.addView(moreGamesText, fullWidthWrapContent());
-        content.addView(gameCard, cardLayoutParams());
-
-        LinearLayout rewardCard = createCard();
-        rewardCard.addView(createSectionTitle("奖励领取"), fullWidthWrapContent());
-        TextView rewardCopy = createBodyText("完成小游戏后，奖励会先进入“待领取”。你需要主动观看一次激励广告，广告 SDK 确认后才会入账。");
-        rewardCard.addView(rewardCopy, fullWidthWrapContent());
+        rewardStats.addView(createMetricBox("账户金币", balanceText), weightedParams(1f, 0));
+        rewardStats.addView(createMetricBox("待领取", pendingRewardText), weightedParams(1f, dp(10)));
+        rewardCard.addView(rewardStats, fullWidthWrapContent());
         adLoadingProgress = new ProgressBar(this);
         adLoadingProgress.setIndeterminate(true);
         rewardCard.addView(adLoadingProgress, wrapContentCentered());
@@ -197,8 +184,49 @@ public class MainActivity extends Activity {
         rewardCard.addView(claimRewardButton, fullWidthWrapContent());
         content.addView(rewardCard, cardLayoutParams());
 
+        LinearLayout gameCard = createCard();
+        gameCard.addView(createSectionTitle("热门小游戏"), fullWidthWrapContent());
+        gameStatusText = createBodyText(getString(R.string.spiky_snake_intro));
+        gameCard.addView(gameStatusText, fullWidthWrapContent());
+
+        LinearLayout snakePanel = createInsetPanel(Color.rgb(246, 251, 249), Color.rgb(206, 231, 224));
+        snakePanel.addView(createSmallCaps("主推 · 手速挑战"), fullWidthWrapContent());
+        TextView snakeTitle = createTitle("尖刺蛇 Spiky Snake");
+        snakeTitle.setTextSize(22);
+        snakePanel.addView(snakeTitle, fullWidthWrapContent());
+        snakePanel.addView(createBodyText("滑动控制方向，吃金币冲分，避开尖刺、墙壁和自己的身体。"), fullWidthWrapContent());
+        Button spikySnakeButton = new Button(this);
+        spikySnakeButton.setText(R.string.play_spiky_snake);
+        stylePrimaryButton(spikySnakeButton);
+        spikySnakeButton.setOnClickListener(view -> showSpikySnakeGame());
+        snakePanel.addView(spikySnakeButton, fullWidthWrapContent());
+        gameCard.addView(snakePanel, fullWidthWrapContent());
+
+        LinearLayout guessPanel = createInsetPanel(Color.rgb(255, 250, 232), Color.rgb(245, 222, 142));
+        guessPanel.addView(createSmallCaps("快速任务"), fullWidthWrapContent());
+        TextView guessTitle = createTitle("幸运猜数");
+        guessTitle.setTextSize(20);
+        guessPanel.addView(guessTitle, fullWidthWrapContent());
+        guessPanel.addView(createBodyText("30 秒内完成一次轻量小游戏，适合快速测试奖励领取流程。"), fullWidthWrapContent());
+        Button guessGameButton = new Button(this);
+        guessGameButton.setText(R.string.play_guess_game);
+        styleSecondaryButton(guessGameButton);
+        guessGameButton.setOnClickListener(view -> showGuessGameDialog());
+        guessPanel.addView(guessGameButton, fullWidthWrapContent());
+        gameCard.addView(guessPanel, fullWidthWrapContent());
+
+        TextView moreGamesText = createCaption("规划中：转盘、刮刮卡、答题、拼图、排行榜、每日任务。");
+        gameCard.addView(moreGamesText, fullWidthWrapContent());
+        content.addView(gameCard, cardLayoutParams());
+
         LinearLayout profileCard = createCard();
-        profileCard.addView(createSectionTitle("我的账户"), fullWidthWrapContent());
+        profileCard.addView(createSectionTitle("个人中心"), fullWidthWrapContent());
+        accountText = createBodyText("");
+        profileCard.addView(accountText, fullWidthWrapContent());
+        LinearLayout profilePlan = createInsetPanel(Color.rgb(247, 248, 255), Color.rgb(222, 224, 247));
+        profilePlan.addView(createSmallCaps("成长路线"), fullWidthWrapContent());
+        profilePlan.addView(createBodyText("小游戏金币 · 每日任务 · 邀请活动 · 提现审核 · 反作弊风控"), fullWidthWrapContent());
+        profileCard.addView(profilePlan, fullWidthWrapContent());
         withdrawButton = new Button(this);
         withdrawButton.setText(R.string.request_withdrawal);
         styleSecondaryButton(withdrawButton);
@@ -421,8 +449,8 @@ public class MainActivity extends Activity {
 
         NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.CHINA);
         accountText.setText("大学生体验账户\n" + ledger.getAccountId());
-        balanceText.setText("账户金币\n" + numberFormat.format(ledger.getBalance()));
-        pendingRewardText.setText("待领取任务奖励\n" + numberFormat.format(ledger.getPendingReward()) + " 金币");
+        balanceText.setText(numberFormat.format(ledger.getBalance()));
+        pendingRewardText.setText(numberFormat.format(ledger.getPendingReward()) + " 金币");
         historyText.setText(ledger.getHistoryText());
         withdrawButton.setEnabled(ledger.getBalance() >= MIN_WITHDRAW_COINS);
         statusText.setText(status);
@@ -440,12 +468,125 @@ public class MainActivity extends Activity {
         return card;
     }
 
+    private LinearLayout createGlassCard() {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(16), dp(14), dp(16), dp(14));
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.argb(36, 255, 255, 255));
+        background.setStroke(dp(1), Color.argb(80, 255, 255, 255));
+        background.setCornerRadius(dp(22));
+        card.setBackground(background);
+        return card;
+    }
+
+    private LinearLayout createLaunchStep(String number, String title, String description) {
+        LinearLayout row = createHorizontalRow();
+        row.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView badge = new TextView(this);
+        badge.setText(number);
+        badge.setTextColor(Color.rgb(255, 221, 107));
+        badge.setTextSize(16);
+        badge.setTypeface(Typeface.DEFAULT_BOLD);
+        badge.setGravity(Gravity.CENTER);
+        GradientDrawable badgeBackground = new GradientDrawable();
+        badgeBackground.setColor(Color.argb(42, 255, 255, 255));
+        badgeBackground.setCornerRadius(dp(18));
+        badge.setBackground(badgeBackground);
+        row.addView(badge, new LinearLayout.LayoutParams(dp(42), dp(42)));
+
+        LinearLayout copy = new LinearLayout(this);
+        copy.setOrientation(LinearLayout.VERTICAL);
+        copy.setPadding(dp(12), 0, 0, 0);
+        TextView titleView = new TextView(this);
+        titleView.setText(title);
+        titleView.setTextColor(Color.WHITE);
+        titleView.setTextSize(15);
+        titleView.setTypeface(Typeface.DEFAULT_BOLD);
+        copy.addView(titleView, fullWidthWrapContent());
+        TextView descView = new TextView(this);
+        descView.setText(description);
+        descView.setTextColor(Color.rgb(204, 231, 224));
+        descView.setTextSize(13);
+        copy.addView(descView, fullWidthWrapContent());
+        row.addView(copy, weightedParams(1f, 0));
+        return row;
+    }
+
+    private LinearLayout createHeroStat(String value, String label) {
+        LinearLayout stat = new LinearLayout(this);
+        stat.setOrientation(LinearLayout.VERTICAL);
+        stat.setGravity(Gravity.CENTER);
+        stat.setPadding(dp(8), dp(10), dp(8), dp(10));
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.argb(32, 255, 255, 255));
+        background.setCornerRadius(dp(16));
+        stat.setBackground(background);
+
+        TextView valueView = new TextView(this);
+        valueView.setText(value);
+        valueView.setTextColor(Color.WHITE);
+        valueView.setTextSize(18);
+        valueView.setTypeface(Typeface.DEFAULT_BOLD);
+        valueView.setGravity(Gravity.CENTER);
+        stat.addView(valueView, fullWidthWrapContent());
+
+        TextView labelView = new TextView(this);
+        labelView.setText(label);
+        labelView.setTextColor(Color.rgb(204, 231, 224));
+        labelView.setTextSize(12);
+        labelView.setGravity(Gravity.CENTER);
+        stat.addView(labelView, fullWidthWrapContent());
+        return stat;
+    }
+
+    private LinearLayout createMetricBox(String label, TextView metricText) {
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setGravity(Gravity.CENTER);
+        box.setPadding(dp(10), dp(12), dp(10), dp(12));
+        box.setBackground(insetBackground(Color.rgb(255, 255, 255), Color.rgb(230, 237, 234), dp(18)));
+
+        TextView labelView = createCaption(label);
+        labelView.setGravity(Gravity.CENTER);
+        box.addView(labelView, fullWidthWrapContent());
+        box.addView(metricText, fullWidthWrapContent());
+        return box;
+    }
+
+    private LinearLayout createInsetPanel(int fillColor, int strokeColor) {
+        LinearLayout panel = new LinearLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.setPadding(dp(14), dp(14), dp(14), dp(14));
+        panel.setBackground(insetBackground(fillColor, strokeColor, dp(20)));
+        return panel;
+    }
+
+    private LinearLayout createHorizontalRow() {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        return row;
+    }
+
     private TextView createSmallCaps(String text) {
         TextView view = new TextView(this);
         view.setText(text);
         view.setTextSize(12);
         view.setTypeface(Typeface.DEFAULT_BOLD);
         view.setLetterSpacing(0.12f);
+        return view;
+    }
+
+    private TextView createPill(String text) {
+        TextView view = createSmallCaps(text);
+        view.setTextColor(Color.rgb(255, 221, 107));
+        view.setPadding(dp(14), dp(8), dp(14), dp(8));
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.argb(42, 255, 255, 255));
+        background.setStroke(dp(1), Color.argb(84, 255, 255, 255));
+        background.setCornerRadius(dp(999));
+        view.setBackground(background);
         return view;
     }
 
@@ -517,6 +658,13 @@ public class MainActivity extends Activity {
         button.setAllCaps(false);
     }
 
+    private GradientDrawable accentCardBackground() {
+        return new GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                new int[]{Color.rgb(255, 253, 244), Color.rgb(232, 246, 241)}
+        );
+    }
+
     private GradientDrawable startupBackground() {
         return new GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
@@ -546,6 +694,24 @@ public class MainActivity extends Activity {
         drawable.setCornerRadius(dp(22));
         drawable.setStroke(dp(1), Color.rgb(221, 234, 229));
         return drawable;
+    }
+
+    private GradientDrawable insetBackground(int fillColor, int strokeColor, int radius) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(fillColor);
+        drawable.setCornerRadius(radius);
+        drawable.setStroke(dp(1), strokeColor);
+        return drawable;
+    }
+
+    private LinearLayout.LayoutParams weightedParams(float weight, int leftMargin) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                weight
+        );
+        params.setMargins(leftMargin, dp(6), 0, dp(6));
+        return params;
     }
 
     private LinearLayout.LayoutParams cardLayoutParams() {
