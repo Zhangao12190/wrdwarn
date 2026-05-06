@@ -36,6 +36,16 @@
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
+## 直接下载测试 APK
+
+仓库中保留了一份 debug 测试包：
+
+```text
+releases/wrdwarn-reward-ads-debug.apk
+```
+
+这是开发测试版本，使用 Google 官方测试广告位，不适合直接上线发布。
+
 ## 下一步建议
 
 1. 替换包名、应用名与品牌资源

@@ -5,3 +5,7 @@ local.properties
 *.apk
 *.aab
 *.keystore
+
+# Keep manually published test APKs downloadable from the repository.
+!releases/
+!releases/*.apk
